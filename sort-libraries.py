@@ -2,8 +2,29 @@ import argparse
 import os
 import shutil
 
-def sort_samples(source, destination):
-    print(os.listdir(source))
+def get_file_extensions(file_space):
+    # useful for debugging, not used in the main function
+    exts = []
+    for root, dirs, files in file_space:
+        for name in files:
+            if not name.lower().endswith(('.wav', '.aiff', '.aif', '.mid', '.alp', '.nki')):
+                exts.append(name.split('.')[-1])
+    exts = set(exts)
+    print(exts)
+
+
+
+def remove_files_by_type(file_space, source):
+   for root, dirs, files in file_space:
+      for name in files:
+        if not name.lower().endswith(('.wav', '.aiff', '.aif', '.mid', '.alp', '.nki')):
+            os.remove((os.path.join(source, name)))
+
+
+def main(source, destination):
+    file_space = os.walk(source)
+    remove_files_by_type(file_space, source)
+
 
 
 if __name__ == '__main__':
@@ -13,4 +34,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
 
-    sort_samples(args.source, args.destination)
+    main(args.source, args.destination)
